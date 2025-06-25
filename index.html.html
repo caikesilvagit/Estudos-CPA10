@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sua Plataforma Pessoal de Estudos CPA-10</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .task-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .task-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .tab-button.active {
+            background-color: #2563eb; /* blue-600 */
+            color: white;
+            border-color: #2563eb;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .flashcard {
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+        .flashcard-front {
+            background-color: #f9fafb;
+        }
+        .flashcard-back {
+            background-color: #eff6ff;
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <!-- Cabeçalho -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900">Sua Plataforma de Estudos CPA-10</h1>
+            <p class="mt-4 text-lg text-slate-600">Um guia ultra-detalhado de 21 dias para a sua aprovação.</p>
+        </header>
+
+        <!-- Barra de Progresso -->
+        <div class="mb-10 px-2">
+            <h2 class="text-lg font-semibold mb-2 text-slate-700">Progresso Total das Tarefas:</h2>
+            <div class="w-full bg-slate-200 rounded-full h-4">
+                <div id="progressBar" class="bg-blue-600 h-4 rounded-full text-center text-white text-xs" style="width: 0%;">0%</div>
+            </div>
+            <p id="progressText" class="text-center text-sm mt-1 text-slate-600">0 tarefas concluídas</p>
+        </div>
+
+        <!-- Plano de Estudos -->
+        <div id="study-plan">
+            <!-- As semanas e dias serão injetados aqui pelo JavaScript -->
+        </div>
+
+        <!-- Seção Final -->
+        <footer class="mt-12 text-center p-6 bg-white rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold text-slate-900 mb-4">Rumo à Aprovação!</h2>
+            <p class="text-slate-600 max-w-3xl mx-auto">
+                Esta versão detalhada é sua maior aliada. Complete cada tarefa com atenção e use as ferramentas de anotação e flashcards para fixar os pontos-chave. A aprovação está nos detalhes.
+            </p>
+        </footer>
+    </div>
+
+    <script>
+    // --- Dados do Plano de Estudos (Versão Ultra-Detalhada) ---
+    const studyPlanData = [
+        {
+            week: 1, title: "Semana 1: A Base Sólida para a Aprovação",
+            days: [
+                {
+                    day: 1, title: "Módulo 1: Estrutura do SFN",
+                    tasks: [
+                        { id: 'd1t1', text: 'Entender a hierarquia: Órgãos Normativos, Supervisores e Operadores.', link: 'https://www.youtube.com/watch?v=RWWa_2kY_ck' },
+                        { id: 'd1t2', text: 'Diferenciar CMN (define as regras) de BACEN e CVM (fiscalizam). Ponto-chave!' },
+                        { id: 'd1t3', text: 'Listar 3 funções do CMN (ex: fixar diretrizes da política monetária).'},
+                        { id: 'd1t4', text: 'Listar 3 funções do BACEN (ex: emitir moeda, controlar crédito, fiscalizar bancos).'},
+                        { id: 'd1t5', text: 'Listar 3 funções da CVM (ex: fiscalizar S.A. de capital aberto, mercado de ações e debêntures).'},
+                        { id: 'd1t6', text: 'Criar um flashcard: "CMN vs. BACEN vs. CVM". Qual a principal função de cada um?' },
+                        { id: 'd1t7', text: 'Anotar quem são os intermediários financeiros (bancos, corretoras, distribuidoras).'}
+                    ]
+                },
+                {
+                    day: 2, title: "Módulo 2: Lavagem de Dinheiro e Ética",
+                    tasks: [
+                        { id: 'd2t1', text: 'Memorizar as 3 fases da lavagem de dinheiro: Colocação, Ocultação, Integração.', link: 'https://www.youtube.com/watch?v=0kF6x0oX0E4' },
+                        { id: 'd2t2', text: 'Entender o papel do COAF (recebe e analisa comunicações de operações suspeitas).'},
+                        { id: 'd2t3', text: 'Saber as penalidades para o crime de lavagem de dinheiro (reclusão e multa).'},
+                        { id: 'd2t4', text: 'Criar flashcards para cada fase da lavagem de dinheiro, com um exemplo prático.'},
+                        { id: 'd2t5', text: 'Fazer 15 questões de simulado focadas em Lavagem de Dinheiro.', link: 'https://topinvest.com.br/simulados-cpa-10-gratis/' },
+                    ]
+                },
+                {
+                    day: 3, title: "Módulo 2: Suitability (API)",
+                    tasks: [
+                        { id: 'd3t1', text: 'Compreender o objetivo do API: adequar o produto ao perfil do cliente.', link: 'https://www.youtube.com/watch?v=x7A0jXvM3uY' },
+                        { id: 'd3t2', text: 'Memorizar os 3 pilares do API: Objetivo, Situação Financeira, Conhecimento.' },
+                        { id: 'd3t3', text: 'Saber o prazo de validade do API (máximo 24 meses). Isso cai muito!' },
+                        { id: 'd3t4', text: 'Diferenciar os perfis: Conservador, Moderado e Arrojado (ou Agressivo).' },
+                        { id: 'd3t5', text: 'Anotar o que fazer se o cliente quiser um produto inadequado ao seu perfil (coletar termo de ciência de desenquadramento).'},
+                        { id: 'd3t6', text: 'Criar um flashcard para cada perfil de investidor com exemplos de produtos adequados.'},
+                    ]
+                },
+                {
+                    day: 4, title: "Módulo 3: Economia e Finanças",
+                    tasks: [
+                        { id: 'd4t1', text: 'Definir PIB, Selic (meta e over), IPCA e IGPM.', link: 'https://www.youtube.com/watch?v=3-qWc-A6XTo' },
+                        { id: 'd4t2', text: 'Entender a função do COPOM (Comitê de Política Monetária) - define a meta da Selic.' },
+                        { id: 'd4t3', text: 'Saber a diferença entre IPCA (inflação do consumidor) e IGPM (inflação "do aluguel").'},
+                        { id: 'd4t4', text: 'Relacionar Selic alta com desestímulo ao consumo e estímulo a investimentos de renda fixa.'},
+                        { id: 'd4t5', text: 'Criar flashcard: "Taxa Selic sobe, o que acontece com a bolsa e com a renda fixa?"' },
+                    ]
+                },
+                 {
+                    day: 5, title: "Módulo 4: Riscos e Diversificação",
+                    tasks: [
+                        { id: 'd5t1', text: 'Definir e diferenciar os 3 principais riscos: de Mercado, de Crédito e de Liquidez.', link: 'https://www.youtube.com/watch?v=sUypP3LgGg4' },
+                        { id: 'd5t2', text: 'Entender a relação direta entre Risco e Retorno esperado.'},
+                        { id: 'd5t3', text: 'Compreender a Diversificação como forma de diluir o risco NÃO-sistêmico.'},
+                        { id: 'd5t4', text: 'Saber a diferença entre Risco Sistêmico (não pode ser diversificado, afeta a todos) e Não-Sistêmico (pode ser diversificado, risco de uma empresa/setor). Pegadinha clássica!'},
+                        { id: 'd5t5', text: 'Anotar exemplos práticos de cada um dos 3 riscos.'},
+                        { id: 'd5t6', text: 'Fazer 20 questões de simulado focadas em Princípios de Investimento.', link: 'https://topinvest.com.br/simulados-cpa-10-gratis/' },
+                    ]
+                },
+                {
+                    day: 6, title: "Módulo 7: Previdência (PGBL x VGBL)",
+                    tasks: [
+                         { id: 'd6t1', text: 'Dominar a principal diferença: PGBL (vantagem fiscal na aplicação, IR sobre o total) vs. VGBL (sem vantagem na aplicação, IR só sobre o rendimento).', link: 'https://www.youtube.com/watch?v=G_H9q2LNNI4' },
+                         { id: 'd6t2', text: 'Associar PGBL à declaração COMPLETA de IR e VGBL à declaração SIMPLIFICADA ou isenta.' },
+                         { id: 'd6t3', text: 'Diferenciar as tabelas de tributação: Progressiva (alíquota sobe com o valor) e Regressiva (alíquota cai com o tempo).'},
+                         { id: 'd6t4', text: 'Saber que Portabilidade não tem cobrança de IR e permite trocar de fundo/seguradora.'},
+                         { id: 'd6t5', text: 'Criar um flashcard: "Cliente declara IR pelo modelo completo. Qual previdência indicar e por quê?"'},
+                    ]
+                },
+                {
+                    day: 7, title: "Revisão Intensa da Semana 1",
+                    tasks: [
+                        { id: 'd7t1', text: 'Refazer TODAS as questões que errou em simulados até agora.'},
+                        { id: 'd7t2', text: 'Revisar TODAS as suas anotações na plataforma.' },
+                        { id: 'd7t3', text: 'Passar por TODOS os flashcards criados, respondendo-os de memória antes de virar.' },
+                        { id: 'd7t4', text: 'Fazer um simulado geral de 25 questões com os módulos 1, 2, 3, 4 e 7.', link: 'https://topinvest.com.br/simulados-cpa-10-gratis/' }
+                    ]
+                }
+            ]
+        },
+        {
+            week: 2, title: "Semana 2: Dominando os Produtos (Peso Pesado da Prova)",
+            days: [
+                {
+                    day: 8, title: "Módulo 5: Fundos - Estrutura e Participantes",
+                    tasks: [
+                        { id: 'd8t1', text: 'Definir o que é um condomínio de investidores e um cotista.', link: 'https://www.youtube.com/watch?v=S2ucBvn5K54' },
+                        { id: 'd8t2', text: 'Diferenciar o papel do Administrador (responsável legal), Gestor (compra/vende ativos), Custodiante (guarda os ativos) e Distribuidor (vende as cotas).' },
+                        { id: 'd8t3', text: 'Anotar as responsabilidades de cada um. Isso é muito importante!'},
+                        { id: 'd8t4', text: 'Entender o que é o valor da cota (Patrimônio Líquido / Nº de Cotas).'},
+                        { id: 'd8t5', text: 'Criar flashcards para cada participante do fundo e sua principal função.'},
+                    ]
+                },
+                {
+                    day: 9, title: "Módulo 5: Fundos - Taxas e Classificação",
+                    tasks: [
+                        { id: 'd9t1', text: 'Diferenciar Taxa de Administração (percentual fixo sobre o PL) e Taxa de Performance (prêmio por superar o benchmark).', link: 'https://www.youtube.com/watch?v=D-MhEekY3aI'},
+                        { id: 'd9t2', text: 'Entender a regra da "linha d\'água" para a taxa de performance.' },
+                        { id: 'd9t3', text: 'Memorizar a classificação CVM: Renda Fixa, Ações, Multimercado, Cambial.'},
+                        { id: 'd9t4', text: 'Saber a composição mínima de um Fundo de Ações (67% em ações) e Renda Fixa (80% em ativos de RF).'},
+                        { id: 'd9t5', text: 'Anotar quais fundos podem ter taxa de performance (ex: Ações, Multimercado).'}
+                    ]
+                },
+                {
+                    day: 10, title: "Módulo 5: Fundos - Tributação (Come-Cotas!)",
+                    tasks: [
+                        { id: 'd10t1', text: 'Dominar o Come-Cotas: o que é (antecipação de IR), quando ocorre (último dia de Maio e Novembro), e sobre quais fundos incide (RF Curto/Longo Prazo, Multimercados).', link: 'https://www.youtube.com/watch?v=2rEklK6zYew'},
+                        { id: 'd10t2', text: 'Saber que Fundos de Ações NÃO têm come-cotas.' },
+                        { id: 'd10t3', text: 'Diferenciar a alíquota do come-cotas: 15% para Longo Prazo e 20% para Curto Prazo.'},
+                        { id: 'd10t4', text: 'Anotar a tabela de IR regressivo para fundos de Curto e Longo Prazo.'},
+                        { id: 'd10t5', text: 'Fazer um simulado completo SÓ do Módulo 5 (30 questões).', link: 'https://topinvest.com.br/simulados-cpa-10-gratis/' },
+                    ]
+                },
+                {
+                    day: 11, title: "Módulo 6: Renda Fixa - Títulos Públicos e FGC",
+                    tasks: [
+                        { id: 'd11t1', text: 'Diferenciar os Títulos Públicos Federais: LFT (pós-fixada, atrelada à Selic), LTN (prefixada), NTN-B/Principal (híbrida, atrelada ao IPCA).', link: 'https://www.youtube.com/watch?v=q6e0a_i4p1s'},
+                        { id: 'd11t2', text: 'Memorizar TUDO sobre o FGC: o que é, o limite de R$ 250 mil por CPF/conglomerado, e o teto global de R$ 1 milhão (renovável a cada 4 anos).'},
+                        { id: 'd11t3', text: 'Criar uma tabela nas anotações: de um lado produtos COBERTOS pelo FGC (CDB, LCI, LCA, Poupança), do outro os NÃO COBERTOS (Fundos, Debêntures, CRI, CRA, Ações).'},
+                        { id: 'd11t4', text: 'Criar um flashcard: "Qual título público me protege da inflação?" Resposta: NTN-B.'}
+                    ]
+                },
+                {
+                    day: 12, title: "Módulo 6: Renda Fixa - Títulos Privados",
+                    tasks: [
+                        { id: 'd12t1', text: 'Diferenciar CDB (tem IR), LCI e LCA (isentos de IR para PF).', link: 'https://www.youtube.com/watch?v=W3o8Ua_2oFg' },
+                        { id: 'd12t2', text: 'Definir Debêntures como títulos de dívida de empresas não-financeiras e saber que NÃO têm FGC.'},
+                        { id: 'd12t3', text: 'Entender o papel do Agente Fiduciário nas debêntures (protege os debenturistas).'},
+                        { id: 'd12t4', text: 'Diferenciar CRI e CRA (também isentos de IR para PF e sem FGC).'},
+                        { id: 'd12t5', text: 'Anotar a tabela de IR regressiva para Renda Fixa (22.5% até 180 dias ... 15% acima de 720 dias).'}
+                    ]
+                },
+                {
+                    day: 13, title: "Módulo 6: Renda Variável",
+                    tasks: [
+                        { id: 'd13t1', text: 'Diferenciar Mercado Primário (empresa emite, IPO) e Secundário (negociação entre investidores).', link: 'https://www.youtube.com/watch?v=Yf0i2gWj9_I' },
+                        { id: 'd13t2', text: 'Diferenciar Ações Ordinárias (ON - dão direito a voto) de Preferenciais (PN - dão preferência no recebimento de dividendos).'},
+                        { id: 'd13t3', text: 'Saber a alíquota de IR para Ações: 15% sobre o lucro em swing trade (venda > R$ 20 mil/mês) e 20% em day trade (sem isenção).'},
+                        { id: 'd13t4', text: 'Anotar o conceito de Tag Along.'},
+                        { id: 'd13t5', text: 'Fazer um simulado completo SÓ do Módulo 6 (30 questões).', link: 'https://topinvest.com.br/simulados-cpa-10-gratis/' }
+                    ]
+                },
+                {
+                    day: 14, title: "Revisão Intensa da Semana 2",
+                    tasks: [
+                        { id: 'd14t1', text: 'Refazer TODAS as questões que errou dos Módulos 5 e 6.'},
+                        { id: 'd14t2', text: 'Passar por TODOS os flashcards criados esta semana.' },
+                        { id: 'd14t3', text: 'Ler em voz alta suas anotações sobre FGC e Come-Cotas para fixar.'},
+                        { id: 'd14t4', text: 'Fazer um simulado geral de 50 questões, focando em acertar mais de 70%.', link: 'https://topinvest.com.br/simulados-cpa-10-gratis/' }
+                    ]
+                }
+            ]
+        },
+        {
+            week: 3, title: "Semana 3: Lapidação e Simulação Final",
+            days: [
+                { day: 15, title: "Revisão Geral dos Módulos 1 a 4", tasks: [
+                    {id: 'd15t1', text: 'Refazer 10 questões de cada um dos módulos: SFN, Ética/API, Economia, Princípios.'},
+                    {id: 'd15t2', text: 'Revisar os flashcards desses módulos, focando nos que você ainda tem dúvida.'},
+                    {id: 'd15t3', text: 'Anotar os 3 tópicos que você considera mais difíceis até agora.'}
+                ]},
+                { day: 16, title: "Revisão Geral dos Módulos 5 a 7", tasks: [
+                    {id: 'd16t1', text: 'Refazer 15 questões de Fundos, 15 de Renda Fixa/Variável e 10 de Previdência.'},
+                    {id: 'd16t2', text: 'Revisar os flashcards desses módulos. Foco em Come-Cotas, FGC e PGBL vs VGBL.'},
+                    {id: 'd16t3', text: 'Revisar sua tabela de produtos com e sem FGC.'}
+                ]},
+                { day: 17, title: "1º Simulado Completo e Análise de Erros", tasks: [
+                    {id: 'd17t1', text: 'Fazer um simulado completo (50 questões) em no máximo 2 horas. Sem consultas!'},
+                    {id: 'd17t2', text: 'Corrigir o simulado e criar uma lista de ANÁLISE DE ERROS nas anotações do dia.'},
+                    {id: 'd17t3', text: 'Para cada erro, escrever: 1. Qual era o conceito? 2. Por que eu errei? (distração, não sabia, etc) 3. Qual a resposta correta e por quê?'},
+                    {id: 'd17t4', text: 'Reestudar os conceitos de TODAS as questões que errou.'}
+                ]},
+                { day: 18, title: "Foco nos Pontos Fracos", tasks: [
+                    {id: 'd18t1', text: 'Pegar sua lista de análise de erros de ontem e reestudar profundamente cada um dos tópicos.'},
+                    {id: 'd18t2', text: 'Fazer 30 questões de simulado apenas dos 2 módulos que você teve o pior desempenho ontem.'},
+                    {id: 'd18t3', text: 'Criar novos flashcards para os conceitos que ainda não estão 100% claros.'}
+                ]},
+                { day: 19, title: "2º Simulado Completo e Refinamento", tasks: [
+                    {id: 'd19t1', text: 'Fazer outro simulado completo (50 questões). Meta: aumentar seu percentual de acertos.'},
+                    {id: 'd19t2', text: 'Repetir a análise de erros, comparando com a do primeiro simulado. Você repetiu erros?'},
+                    {id: 'd19t3', text: 'Revisar todas as fórmulas e percentuais (come-cotas, IR, etc).'}
+                ]},
+                { day: 20, title: "Revisão Final e Confiança", tasks: [
+                    {id: 'd20t1', text: 'NÃO fazer simulado completo. Apenas passe por todos os seus flashcards uma última vez.'},
+                    {id: 'd20t2', text: 'Leia rapidamente todas as suas anotações na plataforma.'},
+                    {id: 'd20t3', text: 'Foque em descansar a mente. O conhecimento já está aí.'}
+                ]},
+                { day: 21, title: "Véspera da Prova: DESCANSO OBRIGATÓRIO", tasks: [
+                    {id: 'd21t1', text: 'NÃO ESTUDE NADA RELACIONADO À PROVA. Sério.'},
+                    {id: 'd21t2', text: 'Organize seus documentos para o dia do exame.'},
+                    {id: 'd21t3', text: 'Faça algo relaxante: assista a um filme, ouça música, caminhe.'},
+                    {id: 'd21t4', text: 'Durma cedo e bem. Confie na sua excelente preparação.'}
+                ]}
+            ]
+        }
+    ];
+
+    // --- Lógica da Aplicação (Idêntica à versão anterior, sem alterações) ---
+    document.addEventListener('DOMContentLoaded', function() {
+        let completedTasks = JSON.parse(localStorage.getItem('cpa10_completedTasks')) || {};
+        let userNotes = JSON.parse(localStorage.getItem('cpa10_userNotes')) || {};
+        let userFlashcards = JSON.parse(localStorage.getItem('cpa10_userFlashcards')) || {};
+
+        const totalTasks = studyPlanData.reduce((acc, week) => acc + week.days.reduce((dAcc, day) => dAcc + day.tasks.length, 0), 0);
+
+        function renderPlan() {
+            const planContainer = document.getElementById('study-plan');
+            planContainer.innerHTML = '';
+            
+            studyPlanData.forEach(weekData => {
+                const weekSection = document.createElement('section');
+                weekSection.className = 'mb-10';
+                weekSection.innerHTML = `<h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-6 pb-2 border-b-2 border-blue-200">${weekData.title}</h2>`;
+                
+                const daysGrid = document.createElement('div');
+                daysGrid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6';
+
+                weekData.days.forEach(dayData => {
+                    const card = document.createElement('div');
+                    card.className = 'task-card bg-white rounded-lg shadow-md p-0 border-l-4 border-blue-500 flex flex-col overflow-hidden';
+                    card.dataset.dayId = `day-${dayData.day}`;
+                    
+                    const cardHeader = `
+                        <div class="p-4 bg-slate-50 border-b">
+                            <h3 class="text-xl font-semibold text-slate-900">Dia ${dayData.day}</h3>
+                            <p class="text-md text-slate-500">${dayData.title}</p>
+                        </div>`;
+                    
+                    const tabButtons = `
+                        <div class="flex border-b border-slate-200 px-2">
+                            <button class="tab-button text-sm font-medium py-2 px-4 border-b-2 border-transparent hover:bg-slate-100 active" data-tab="tasks">Tarefas Detalhadas</button>
+                            <button class="tab-button text-sm font-medium py-2 px-4 border-b-2 border-transparent hover:bg-slate-100" data-tab="notes">Anotações</button>
+                            <button class="tab-button text-sm font-medium py-2 px-4 border-b-2 border-transparent hover:bg-slate-100" data-tab="flashcards">Flashcards</button>
+                        </div>`;
+
+                    let tasksHtml = dayData.tasks.map(task => `
+                        <div class="flex items-start p-2 hover:bg-slate-50 rounded">
+                            <input type="checkbox" id="${task.id}" data-task-id="${task.id}" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 task-checkbox mt-1 flex-shrink-0">
+                            <label for="${task.id}" class="ml-3 text-sm text-slate-700 flex-1">${task.text}</label>
+                            ${task.link ? `<a href="${task.link}" target="_blank" class="ml-2 text-blue-500 hover:text-blue-700 flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>` : ''}
+                        </div>
+                    `).join('');
+                    const tasksTab = `<div class="tab-content active p-4 space-y-1" data-tab-content="tasks">${tasksHtml}</div>`;
+                    
+                    const noteText = userNotes[card.dataset.dayId] || '';
+                    const notesTab = `
+                        <div class="tab-content p-4" data-tab-content="notes">
+                            <textarea class="w-full h-48 p-2 border rounded-md text-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Suas anotações do dia...">${noteText}</textarea>
+                            <button class="note-save-btn mt-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700">Salvar Anotações</button>
+                        </div>`;
+                        
+                    const flashcardsTab = `
+                        <div class="tab-content p-4" data-tab-content="flashcards">
+                            <form class="flashcard-form mb-4 space-y-2">
+                                <input type="text" placeholder="Frente do card (Pergunta)" required class="w-full p-2 border rounded-md text-sm">
+                                <textarea placeholder="Verso do card (Resposta)" required class="w-full p-2 border rounded-md text-sm h-20"></textarea>
+                                <button type="submit" class="w-full px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700">Criar Flashcard</button>
+                            </form>
+                            <div class="flashcard-list grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+                        </div>`;
+
+                    card.innerHTML = cardHeader + tabButtons + `<div class="flex-grow overflow-y-auto">${tasksTab + notesTab + flashcardsTab}</div>`;
+                    daysGrid.appendChild(card);
+                });
+                weekSection.appendChild(daysGrid);
+                planContainer.appendChild(weekSection);
+            });
+            renderAllFlashcards();
+            updateProgress();
+            addEventListeners();
+        }
+
+        function renderAllFlashcards() {
+            document.querySelectorAll('.flashcard-list').forEach(list => {
+                const dayId = list.closest('.task-card').dataset.dayId;
+                renderFlashcardsForDay(dayId);
+            });
+        }
+
+        function renderFlashcardsForDay(dayId) {
+            const listContainer = document.querySelector(`[data-day-id="${dayId}"] .flashcard-list`);
+            if (!listContainer) return;
+
+            const cards = userFlashcards[dayId] || [];
+            if (cards.length === 0) {
+                listContainer.innerHTML = '<p class="text-xs text-center text-slate-400 col-span-full">Nenhum flashcard criado para este dia.</p>';
+                return;
+            }
+            
+            listContainer.innerHTML = cards.map((card, index) => `
+                <div class="flashcard h-32 text-sm relative">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">${card.front}</div>
+                        <div class="flashcard-back">${card.back}</div>
+                    </div>
+                     <button class="flashcard-delete-btn absolute top-1 right-1 bg-red-500 text-white rounded-full h-5 w-5 flex items-center justify-center text-xs z-10 opacity-50 hover:opacity-100" data-index="${index}">&times;</button>
+                </div>
+            `).join('');
+        }
+        
+        function updateProgress() {
+            const completedCount = Object.values(completedTasks).filter(Boolean).length;
+            const progressPercentage = totalTasks > 0 ? (completedCount / totalTasks) * 100 : 0;
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            
+            progressBar.style.width = `${progressPercentage}%`;
+            progressBar.textContent = `${Math.round(progressPercentage)}%`;
+            progressText.textContent = `${completedCount} de ${totalTasks} tarefas concluídas`;
+        }
+        
+        function saveState() {
+            localStorage.setItem('cpa10_completedTasks', JSON.stringify(completedTasks));
+            localStorage.setItem('cpa10_userNotes', JSON.stringify(userNotes));
+            localStorage.setItem('cpa10_userFlashcards', JSON.stringify(userFlashcards));
+        }
+
+        function addEventListeners() {
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const card = e.target.closest('.task-card');
+                    const tab = e.target.dataset.tab;
+                    card.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
+                    card.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                        if (content.dataset.tabContent === tab) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', (e) => {
+                    const taskId = e.target.dataset.taskId;
+                    completedTasks[taskId] = e.target.checked;
+                    saveState();
+                    updateProgress();
+                });
+            });
+
+            document.querySelectorAll('.note-save-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const card = e.target.closest('.task-card');
+                    const dayId = card.dataset.dayId;
+                    const textarea = card.querySelector('textarea');
+                    userNotes[dayId] = textarea.value;
+                    saveState();
+                    e.target.textContent = 'Salvo!';
+                    setTimeout(() => { e.target.textContent = 'Salvar Anotações'; }, 1500);
+                });
+            });
+
+            document.querySelectorAll('.flashcard-form').forEach(form => {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const card = e.target.closest('.task-card');
+                    const dayId = card.dataset.dayId;
+                    const front = e.target.elements[0].value;
+                    const back = e.target.elements[1].value;
+                    if (!userFlashcards[dayId]) userFlashcards[dayId] = [];
+                    userFlashcards[dayId].push({ front, back });
+                    saveState();
+                    renderFlashcardsForDay(dayId);
+                    form.reset();
+                });
+            });
+
+            document.body.addEventListener('click', (e) => {
+                if (e.target.closest('.flashcard')) {
+                    e.target.closest('.flashcard').classList.toggle('flipped');
+                }
+                if (e.target.classList.contains('flashcard-delete-btn')) {
+                    e.stopPropagation();
+                    const card = e.target.closest('.task-card');
+                    const dayId = card.dataset.dayId;
+                    const index = parseInt(e.target.dataset.index, 10);
+                    userFlashcards[dayId].splice(index, 1);
+                    saveState();
+                    renderFlashcardsForDay(dayId);
+                }
+            });
+        }
+
+        renderPlan();
+    });
+    </script>
+</body>
+</html>
